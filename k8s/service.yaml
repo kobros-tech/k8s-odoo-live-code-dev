@@ -1,0 +1,28 @@
+# Database
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres
+  namespace: k8s-odoo-live-code-dev
+spec:
+  selector:
+    app: postgres
+  ports:
+    - { port: 5432, targetPort: 5432 }
+
+
+# Odoo
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: odoo
+  namespace: k8s-odoo-live-code-dev
+spec:
+  type: NodePort
+  ports:
+    - port: 8069
+      targetPort: 8069
+  selector:
+    app: odoo

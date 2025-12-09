@@ -1,0 +1,95 @@
+# Namespace
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: k8s-odoo-live-code-dev
+
+
+# Database
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: postgres-pvc
+  namespace: k8s-odoo-live-code-dev
+spec:
+  accessModes: ["ReadWriteOnce"]
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: standard
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres
+  namespace: k8s-odoo-live-code-dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels: { app: postgres }
+  template:
+    metadata:
+      labels: { app: postgres }
+    spec:
+      containers:
+      - name: postgres
+        image: postgres:16
+        env:
+        - { name: POSTGRES_DB, value: "odoo" }
+        - { name: POSTGRES_USER, value: "odoo" }
+        - { name: POSTGRES_PASSWORD, value: "odoo" }
+        volumeMounts:
+        - { name: data, mountPath: /var/lib/postgresql/data }
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: postgres-pvc
+
+
+# Odoo
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: odoo-filestore-pvc
+  namespace: k8s-odoo-live-code-dev
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 2Gi
+  storageClassName: standard
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: odoo
+  namespace: k8s-odoo-live-code-dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels: { app: odoo }
+  template:
+    metadata:
+      labels: { app: odoo }
+    spec:
+      containers:
+        - name: odoo
+          image: odoo-live-dev:16.0
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8069
+          env:
+          - { name: DB_HOST, value: "postgres" }
+          - { name: DB_USER, value: "odoo" }
+          - { name: DB_PASSWORD, value: "odoo" }
+          - { name: DB_NAME, value: "odoo" }
+          volumeMounts:
+          - { name: odoo-filestore, mountPath: /root/.local/share/Odoo/filestore }
+      volumes:
+        - name: odoo-filestore
+          persistentVolumeClaim:
+            claimName: odoo-filestore-pvc
