@@ -1,5 +1,31 @@
 # k8s-live-code-dev
 
+
+## Build odoo app using letta cli client via odoo-llm to interact with letta AI
+
+Demo description for this project
+
+```bash
+┌────────────────────────────┐
+│        Kubernetes          │
+│                            │
+│  ┌──────────────┐          │
+│  │   Odoo        │───┐      │
+│  └──────────────┘   │      │
+│                     ▼      │
+│  ┌───────────────────────┐ │
+│  │   PostgreSQL (DEV)    │ │
+│  │  odoo DB + letta DB   │ │
+│  │  pgvector installed   │ │
+│  └───────────────────────┘ │
+│                     ▲      │
+│  ┌──────────────┐   │      │
+│  │   Letta       │──┘      │
+│  └──────────────┘          │
+│                            │
+└────────────────────────────┘
+```
+
 ## kubernetes development without rebuilding images
 
 

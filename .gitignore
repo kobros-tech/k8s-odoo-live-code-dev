@@ -209,11 +209,24 @@ __marimo__/
 # Ignore everything inside src
 /src/*
 
-# Allow folders to exist if they contain .gitkeep placeholders
-!/src/**/.gitkeep
+# Allow the src directory itself
+!/src/
 
-# Allow only these actual project files
-!/src/Dockerfile
-!/src/main.py
-!/src/requirements.txt
-!/src/odoo.conf
+# Allow docker folder
+!/src/docker/
+
+# Allow odoo docker folder
+!/src/docker/odoo/
+
+# Allow letta folder
+!/src/docker/letta/
+
+# Allow specific odoo docker files
+!/src/docker/odoo/Dockerfile
+!/src/docker/odoo/entrypoint.sh
+!/src/docker/odoo/odoo.conf
+!/src/docker/odoo/repos.yaml
+!/src/docker/odoo/requirements.txt
+
+# Allow everything inside letta folder
+!/src/docker/letta/*
