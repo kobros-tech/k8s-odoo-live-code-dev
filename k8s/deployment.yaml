@@ -11,7 +11,7 @@ metadata:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: postgres-pvc
+  name: postgres-letta-pvc
   namespace: k8s-odoo-live-code-dev
 spec:
   accessModes: ["ReadWriteOnce"]
@@ -23,29 +23,30 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: postgres
+  name: postgres-letta
   namespace: k8s-odoo-live-code-dev
 spec:
   replicas: 1
   selector:
-    matchLabels: { app: postgres }
+    matchLabels: { app: postgres-letta }
   template:
     metadata:
-      labels: { app: postgres }
+      labels: { app: postgres-letta }
     spec:
       containers:
-      - name: postgres
-        image: postgres:16
-        env:
-        - { name: POSTGRES_DB, value: "odoo" }
-        - { name: POSTGRES_USER, value: "odoo" }
-        - { name: POSTGRES_PASSWORD, value: "odoo" }
-        volumeMounts:
-        - { name: data, mountPath: /var/lib/postgresql/data }
+        - name: postgres
+          image: postgres-letta:1.0
+          imagePullPolicy: IfNotPresent
+          env:
+            - { name: POSTGRES_DB, value: "odoo" }
+            - { name: POSTGRES_USER, value: "odoo" }
+            - { name: POSTGRES_PASSWORD, value: "odoo" }
+          volumeMounts:
+            - { name: data, mountPath: /var/lib/postgresql/data }
       volumes:
-      - name: data
-        persistentVolumeClaim:
-          claimName: postgres-pvc
+        - name: data
+          persistentVolumeClaim:
+            claimName: postgres-letta-pvc
 
 
 # Odoo
@@ -93,3 +94,70 @@ spec:
         - name: odoo-filestore
           persistentVolumeClaim:
             claimName: odoo-filestore-pvc
+
+# Creat letta DB Job
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: create-letta-db
+  namespace: k8s-odoo-live-code-dev
+spec:
+  template:
+    spec:
+      containers:
+      - name: init
+        image: postgres-letta:1.0
+        command: ["sh", "-c"]
+        args:
+          - |
+            psql -h postgres -U odoo -c "CREATE DATABASE letta OWNER odoo;" &&
+            psql -h postgres -U odoo -d letta -c "CREATE EXTENSION IF NOT EXISTS vector;"
+        env:
+        - name: PGPASSWORD
+          value: "odoo"
+      restartPolicy: Never
+
+
+# letta server
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: letta-pvc
+  namespace: k8s-odoo-live-code-dev
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 2Gi
+  storageClassName: standard
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: letta
+  namespace: k8s-odoo-live-code-dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: letta
+  template:
+    metadata:
+      labels:
+        app: letta
+    spec:
+      containers:
+      - name: letta
+        image: letta/letta:latest
+        ports:
+        - containerPort: 8283
+        volumeMounts:
+        - name: letta-pv
+          mountPath: /var/lib/postgresql/data
+      volumes:
+      - name: letta-pv
+        persistentVolumeClaim:
+          claimName: letta-pvc

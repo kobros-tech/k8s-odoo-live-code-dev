@@ -7,7 +7,7 @@ metadata:
   namespace: k8s-odoo-live-code-dev
 spec:
   selector:
-    app: postgres
+    app: postgres-letta
   ports:
     - { port: 5432, targetPort: 5432 }
 
@@ -22,7 +22,20 @@ metadata:
 spec:
   type: NodePort
   ports:
-    - port: 8069
-      targetPort: 8069
+  - { port: 8069, targetPort: 8069 }
   selector:
     app: odoo
+
+# letta server
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: letta
+  namespace: k8s-odoo-live-code-dev
+spec:
+  type: NodePort
+  selector:
+    app: letta
+  ports:
+  - { port: 8283, targetPort: 8283 }

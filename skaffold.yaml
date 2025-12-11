@@ -5,7 +5,11 @@ metadata:
 build:
   artifacts:
     - image: odoo-live-dev
-      context: src
+      context: src/docker/odoo
+      docker:
+        dockerfile: Dockerfile
+    - image: postgres-letta
+      context: src/docker/letta
       docker:
         dockerfile: Dockerfile
 manifests:

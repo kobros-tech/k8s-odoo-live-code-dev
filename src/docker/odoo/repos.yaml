@@ -1,0 +1,17 @@
+./odoo:
+  defaults:
+    depth: 1
+  remotes:
+    odoo: https://github.com/odoo/odoo.git
+  target: odoo 16.0
+  merges:
+    - odoo 16.0
+
+./sign:
+  defaults:
+    depth: 1
+  remotes:
+    oca: https://github.com/OCA/sign.git
+  target: oca 16.0
+  merges:
+    - oca 16.0
