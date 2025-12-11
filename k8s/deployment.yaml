@@ -42,7 +42,7 @@ spec:
             - { name: POSTGRES_USER, value: "odoo" }
             - { name: POSTGRES_PASSWORD, value: "odoo" }
           volumeMounts:
-            - { name: data, mountPath: /var/lib/postgresql/data }
+            - { name: data, mountPath: /letta-client/data }
       volumes:
         - name: data
           persistentVolumeClaim:
@@ -77,9 +77,13 @@ spec:
     metadata:
       labels: { app: odoo }
     spec:
+      initContainers:
+      - name: wait-for-postgres
+        image: busybox
+        command: ['sh', '-c', 'until nc -z postgres 5432; do echo waiting for postgres; sleep 2; done;']
       containers:
         - name: odoo
-          image: odoo-live-dev:16.0
+          image: odoo-live-dev:18.0
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8069
@@ -94,6 +98,7 @@ spec:
         - name: odoo-filestore
           persistentVolumeClaim:
             claimName: odoo-filestore-pvc
+
 
 # Creat letta DB Job
 ---
@@ -131,7 +136,7 @@ spec:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 2Gi
+      storage: 1Gi
   storageClassName: standard
 ---
 apiVersion: apps/v1
@@ -154,6 +159,9 @@ spec:
         image: letta/letta:latest
         ports:
         - containerPort: 8283
+        env:
+          - { name: LETTA_SERVER_PASSWORD, value: "admin" }
+          # - { name: OPENAI_API_KEY, value: "my-top-secret-key" }
         volumeMounts:
         - name: letta-pv
           mountPath: /var/lib/postgresql/data

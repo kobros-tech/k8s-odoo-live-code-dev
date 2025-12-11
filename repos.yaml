@@ -1,8 +1,8 @@
-./src/odoo-llm:
+./src/docker/odoo/odoo-llm:
   defaults:
     depth: 1
   remotes:
     apexive: https://github.com/apexive/odoo-llm.git
-  target: apexive 16.0
+  target: apexive 18.0
   merges:
-    - apexive 16.0
+    - apexive 18.0

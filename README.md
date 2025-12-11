@@ -45,7 +45,7 @@ curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
 
 ```bash
 # To download repositories for odoo and modules
-gitaggregate -c repos.yaml 
+gitaggregate -c repos.yaml
 # with this update doo.conf addons path and requirements.txt packages
 
 # To start minikube
@@ -77,6 +77,9 @@ skaffold dev --port-forward --cleanup=false
 
 # odoo url is:
 # http://localhost:8069/
+
+# letta server url is:
+# http://127.0.0.1:8283/
 
 # To access odoo pod
 kubectl get pods
