@@ -1,6 +1,5 @@
 # k8s-live-code-dev
 
-
 ## Build odoo app using letta cli client via odoo-llm to interact with letta AI
 
 Demo description for this project
@@ -10,9 +9,9 @@ Demo description for this project
 │        Kubernetes          │
 │                            │
 │  ┌──────────────┐          │
-│  │   Odoo        │───┐      │
-│  └──────────────┘   │      │
-│                     ▼      │
+│  │   Odoo        │───┐     │
+│  └──────────────┘    │     │
+│                      ▼     │
 │  ┌───────────────────────┐ │
 │  │   PostgreSQL (DEV)    │ │
 │  │  odoo DB + letta DB   │ │
@@ -28,9 +27,7 @@ Demo description for this project
 
 ## kubernetes development without rebuilding images
 
-
 Build k8s deployments and manage them and develop code in real time with skaffold.
-
 
 ## Install Minikube and kubectl and helm
 
@@ -69,7 +66,7 @@ skaffold dev
 minikube ip
 192.168.49.2
 
-# odoo url is: 
+# odoo url is:
 # http://192.168.49.2:30069/
 
 # To access the running odoo in my local machine
