@@ -20,7 +20,7 @@ metadata:
   name: odoo
   namespace: k8s-odoo-live-code-dev
 spec:
-  type: NodePort
+  type: LoadBalancer
   ports:
   - { port: 8069, targetPort: 8069 }
   selector:
@@ -34,7 +34,7 @@ metadata:
   name: letta
   namespace: k8s-odoo-live-code-dev
 spec:
-  type: NodePort
+  type: LoadBalancer
   selector:
     app: letta
   ports:

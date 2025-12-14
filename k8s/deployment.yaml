@@ -164,6 +164,7 @@ spec:
           ports:
             - containerPort: 8283
           env:
+            - { name: LETTA_PG_URI, value: postgresql://odoo:odoo@postgres:5432/letta }
             - { name: SECURE, value: "true" }
             - { name: LETTA_SERVER_PASSWORD, value: "admin" }
             # - { name: OPENAI_API_KEY, value: "my-top-secret-key" }
