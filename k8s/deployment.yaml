@@ -34,7 +34,7 @@ spec:
     spec:
       containers:
         - name: postgres
-          image: postgres-letta:1.0
+          image: kobrostech/postgres-letta:18.0-letta
           imagePullPolicy: IfNotPresent
           env:
             - { name: POSTGRES_DB, value: "odoo" }
@@ -86,7 +86,7 @@ spec:
             ]
       containers:
         - name: odoo
-          image: odoo-live-dev:18.0
+          image: kobrostech/odoo-live-dev:18.0-letta
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8069
@@ -164,7 +164,10 @@ spec:
           ports:
             - containerPort: 8283
           env:
-            - { name: LETTA_PG_URI, value: postgresql://odoo:odoo@postgres:5432/letta }
+            - {
+                name: LETTA_PG_URI,
+                value: postgresql://odoo:odoo@postgres:5432/letta,
+              }
             - { name: SECURE, value: "true" }
             - { name: LETTA_SERVER_PASSWORD, value: "admin" }
             # - { name: OPENAI_API_KEY, value: "my-top-secret-key" }

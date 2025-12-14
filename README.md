@@ -87,11 +87,16 @@ kubectl exec -n k8s-odoo-live-code-dev deploy/letta -- \
   -H "Authorization: Bearer admin" \
   > letta-openapi.json
 
-# with secure authentication use these configurations in odoo:
+# with secure authentication use these configurations in odoo
+
+# Provider
 # Api Base:
 # http://letta.k8s-odoo-live-code-dev.svc.cluster.local:8283
 # Api Key:
 # admin
+
+# MCP External URL
+# http://odoo.k8s-odoo-live-code-dev.svc.cluster.local:8069
 
 # To access odoo pod
 kubectl get pods
