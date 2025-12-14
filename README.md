@@ -72,11 +72,26 @@ minikube ip
 # To access the running odoo in my local machine
 skaffold dev --port-forward --cleanup=false
 
+# To access the project in a remote k8s
+skaffold dev --default-repo=kobrostech --port-forward --cleanup=false
+
 # odoo url is:
 # http://localhost:8069/
 
 # letta server url is:
 # http://127.0.0.1:8283/
+
+# if you use secure authentication use this to test connection:
+kubectl exec -n k8s-odoo-live-code-dev deploy/letta -- \
+  curl -s http://localhost:8283/openapi.json \
+  -H "Authorization: Bearer admin" \
+  > letta-openapi.json
+
+# with secure authentication use these configurations in odoo:
+# Api Base:
+# http://letta.k8s-odoo-live-code-dev.svc.cluster.local:8283
+# Api Key:
+# admin
 
 # To access odoo pod
 kubectl get pods

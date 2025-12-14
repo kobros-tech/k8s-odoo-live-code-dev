@@ -3,6 +3,10 @@ kind: Config
 metadata:
   name: k-s-odoo-live-code-dev
 build:
+  local:
+    push: true
+  tagPolicy:
+    gitCommit: {}
   artifacts:
     - image: odoo-live-dev
       context: src/docker/odoo

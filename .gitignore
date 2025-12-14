@@ -207,8 +207,8 @@ marimo/_lsp/
 __marimo__/
 
 # Ignore everything inside src
-/src/*
-/src/odoo/odoo-llm/*
+src/
+src/docker/odoo/odoo-llm/
 
 # Allow the src directory itself
 !/src/
