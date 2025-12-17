@@ -7,18 +7,6 @@ metadata:
 
 # Database
 ---
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: postgres-letta-pvc
-  namespace: k8s-odoo-live-code-dev
-spec:
-  accessModes: ["ReadWriteOnce"]
-  resources:
-    requests:
-      storage: 1Gi
-  storageClassName: standard
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -40,27 +28,8 @@ spec:
             - { name: POSTGRES_DB, value: "odoo" }
             - { name: POSTGRES_USER, value: "odoo" }
             - { name: POSTGRES_PASSWORD, value: "odoo" }
-          volumeMounts:
-            - { name: data, mountPath: /letta-client/data }
-      volumes:
-        - name: data
-          persistentVolumeClaim:
-            claimName: postgres-letta-pvc
 
 # Odoo
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: odoo-filestore-pvc
-  namespace: k8s-odoo-live-code-dev
-spec:
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 2Gi
-  storageClassName: standard
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -95,15 +64,6 @@ spec:
             - { name: DB_USER, value: "odoo" }
             - { name: DB_PASSWORD, value: "odoo" }
             - { name: DB_NAME, value: "odoo" }
-          volumeMounts:
-            - {
-                name: odoo-filestore,
-                mountPath: /root/.local/share/Odoo/filestore,
-              }
-      volumes:
-        - name: odoo-filestore
-          persistentVolumeClaim:
-            claimName: odoo-filestore-pvc
 
 # Creat letta DB Job
 ---
@@ -129,19 +89,6 @@ spec:
       restartPolicy: Never
 
 # letta server
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: letta-pvc
-  namespace: k8s-odoo-live-code-dev
-spec:
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 1Gi
-  storageClassName: standard
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -170,11 +117,4 @@ spec:
               }
             - { name: SECURE, value: "true" }
             - { name: LETTA_SERVER_PASSWORD, value: "admin" }
-            # - { name: OPENAI_API_KEY, value: "my-top-secret-key" }
-          volumeMounts:
-            - name: letta-pv
-              mountPath: /var/lib/postgresql/data
-      volumes:
-        - name: letta-pv
-          persistentVolumeClaim:
-            claimName: letta-pvc
+            - { name: OPENAI_API_KEY, value: "my-top-secret-key" }

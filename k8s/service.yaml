@@ -11,7 +11,6 @@ spec:
   ports:
     - { port: 5432, targetPort: 5432 }
 
-
 # Odoo
 ---
 apiVersion: v1
@@ -22,7 +21,7 @@ metadata:
 spec:
   type: LoadBalancer
   ports:
-  - { port: 8069, targetPort: 8069 }
+    - { port: 8069, targetPort: 8069 }
   selector:
     app: odoo
 
@@ -38,4 +37,4 @@ spec:
   selector:
     app: letta
   ports:
-  - { port: 8283, targetPort: 8283 }
+    - { port: 8283, targetPort: 8283 }
